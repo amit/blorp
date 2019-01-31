@@ -9,7 +9,7 @@
   $blorp_version="1.7.12";
 
   // load configuration
-  $my_convert_path=""; // keep people from specifying convert on the command line 
+  $my_convert_path=""; // keep people from specifying convert on the command line
                        // in case .blorpconfig.php forgets to clear it.
   include '.blorpconfig.php';
 
@@ -22,9 +22,9 @@
     else $commentdir = ".comments/" . $path;
     if (!file_exists($commentdir))
     {
-      $oldumask = umask(0); 
+      $oldumask = umask(0);
       mkdir($commentdir,0777);
-      umask($oldumask); 
+      umask($oldumask);
     }
     echo "<FORM METHOD=\"GET\" ACTION=\"$thisfn\">Comments:<br>";
 
@@ -61,16 +61,16 @@
             fseek($commentfp,0,SEEK_END);
             fwrite($commentfp,"$REMOTE_ADDR $datestr $addcomment\n");
             $rhost=split('\.',$REMOTE_ADDR,4);
-            echo "<B>added comment</B>: $addcomment (" . $rhost[0] . "." . $rhost[1] . "." . 
+            echo "<B>added comment</B>: $addcomment (" . $rhost[0] . "." . $rhost[1] . "." .
                  $rhost[2] . ".x $datestr)<BR>";
-          } 
+          }
           if ($comments_logall)
           {
             $fp=fopen(".comments/all","a+");
             if ($fp)
             {
-              if (flock($fp,2)) 
-              { 
+              if (flock($fp,2))
+              {
                 fseek($fp,0,SEEK_END);
                 fwrite($fp,"$path/$name: $REMOTE_ADDR@$datestr '$addcomment'\n");
               }
@@ -78,7 +78,7 @@
             }
           }
         }
-      } 
+      }
       fclose($commentfp);
       if (!$setperms) chmod($cfn,0664);
     }
@@ -118,7 +118,7 @@
       if (!$linkcurrent) echo "/" . $pd_arr[sizeof($pd_arr)-1] . "/";
       else echo "/";
     }
-  } 
+  }
 
 // end functions
 
@@ -158,16 +158,16 @@
     $addcomment = $_GET["addcomment"];
   }
 
-  
+
   if (isset($width))
   {
     if ($width=="") setcookie("$resizecookiename");
-    else 
+    else
     {
       $width .= "x" . $height;
       setcookie("$resizecookiename", $width);
     }
-  } 
+  }
   else
   {
     if ($resizecookiename) $width=$_COOKIE[$resizecookiename];
@@ -182,25 +182,25 @@
   $wdp2=$path;
   if (strlen($wdp2) < 1) $wdp2=$defaultroottitle;
 
-  if (isset($img)) 
+  if (isset($img))
   {
     if (strstr($img = rawurldecode($img),"/")) $img="";
     if (substr($img,0,1) == ".") $img="";
   }
   else $img="";
-  if (isset($text)) 
+  if (isset($text))
   {
     if (strstr($text = rawurldecode($text),"/")) $text="";
     if (substr($text,0,1) == ".") $text="";
   }
   else $text="";
 
-  echo "<HTML><HEAD>$headstuff" . 
+  echo "<HTML><HEAD>$headstuff" .
        "<style type=\"text/css\"> .myform { border-top:$formborder solid thin; border-bottom" .
-       ":$formborder solid thin; border-right:$formborder solid thin; border-left:$formborder solid" . 
+       ":$formborder solid thin; border-right:$formborder solid thin; border-left:$formborder solid" .
        " thin; color:$formtextcolor; background:" . $formbg . "; $buttonfontconfig border" .
        "-width:1px; } </style>" .
-       "<TITLE>$sitename - $wdp2" . "</TITLE></HEAD><BODY $bodybgconfig text=\"" . 
+       "<TITLE>$sitename - $wdp2" . "</TITLE></HEAD><BODY $bodybgconfig text=\"" .
        "$textcolor\" link=\"$linkcolor\" alink=\"$linkcolor\" vlink=\"$linkcolor\">\n";
 
   echo "<CENTER>$topline</CENTER>";
@@ -217,34 +217,34 @@
          "<INPUT class=myform TYPE=submit VALUE=\"Set\"> maximum display size to " .
          " <INPUT Class=myform TYPE=NUMBER NAME=width VALUE=\"$thisw\"" .
          " size=4> by <INPUT Class=myform TYPE=NUMBER NAME=height VALUE=\"$thish\" size=4>&nbsp;&nbsp;";
-    if ($path!="") echo "<INPUT TYPE=hidden NAME=path VALUE=\"" . 
+    if ($path!="") echo "<INPUT TYPE=hidden NAME=path VALUE=\"" .
                          rawurlencode($path) . "\">";
-    if ($text!="") echo  "<INPUT TYPE=hidden NAME=text VALUE=\"" . 
+    if ($text!="") echo  "<INPUT TYPE=hidden NAME=text VALUE=\"" .
                          rawurlencode($text) . "\">";
-    if ($img!="") echo "<INPUT TYPE=hidden NAME=img VALUE=\"" . 
+    if ($img!="") echo "<INPUT TYPE=hidden NAME=img VALUE=\"" .
                          rawurlencode($img) . "\">";
     echo "</FORM>";
 
     echo "<FORM METHOD=\"GET\" ACTION=\"$thisfn\">" .
          "<INPUT class=myform TYPE=submit VALUE=\"Unset\">" .
          " <INPUT Class=myform TYPE=hidden NAME=width VALUE=\"\"iii>";
-    if ($path!="") echo "<INPUT TYPE=hidden NAME=path VALUE=\"" . 
+    if ($path!="") echo "<INPUT TYPE=hidden NAME=path VALUE=\"" .
                          rawurlencode($path) . "\">";
-    if ($text!="") echo  "<INPUT TYPE=hidden NAME=text VALUE=\"" . 
+    if ($text!="") echo  "<INPUT TYPE=hidden NAME=text VALUE=\"" .
                          rawurlencode($text) . "\">";
-    if ($img!="") echo "<INPUT TYPE=hidden NAME=img VALUE=\"" . 
+    if ($img!="") echo "<INPUT TYPE=hidden NAME=img VALUE=\"" .
                          rawurlencode($img) . "\">";
     echo "</FORM>";
     echo "</TR></TD>";
   }
-  else if ($text != "") 
+  else if ($text != "")
   {
     echo "<TR><TD VALIGN=TOP><CENTER>";
 
     display_current_path($path,1);
     echo "<BR>";
 
-    if (!eregi("\.(java|asm|inc|c|cpp|h|phps|php-source)$",$text))
+    if (!preg_match("/\.(java|asm|inc|c|cpp|h|phps|php-source)$/i",$text))
       $fnt=substr($text,0,strlen($text)-strlen(strrchr($text,".")));
     else $fnt=$text;
     echo "<BR><FONT size=+2> <B>$fnt</B></font><BR><BR>";
@@ -256,8 +256,8 @@
     $fp=fopen($openfile,"r");
     if ($fp)
     {
-      if (eregi("\.(java|asm|inc|c|cpp|phps|h|php-source)$",$text)) { 
-        while ($line = fgets($fp,1024)) 
+      if (preg_match("/\.(java|asm|inc|c|cpp|phps|h|php-source)$/i",$text)) {
+        while ($line = fgets($fp,1024))
         {
           $line = str_replace('&','&amp',$line);
           $line = str_replace('<','&lt;',$line);
@@ -268,7 +268,7 @@
       }
       else
       {
-        while ($line = fgets($fp,1024)) 
+        while ($line = fgets($fp,1024))
         {
           echo $line;
         }
@@ -281,10 +281,10 @@
         do_comments($text);
         echo "</CENTER></TD></TR>";
       }
-    } 
+    }
     else echo "</PRE></TD></TR>";
   }
-  else if ($img != "") 
+  else if ($img != "")
   {
     echo "<TR><TD VALIGN=TOP><CENTER>";
     if ($path=="") $newwd="";
@@ -293,18 +293,18 @@
     $openpath = ($path=="") ? "." : $path;
     $dp=opendir("./" . $openpath);
     if (!$dp)
-    { 
+    {
       die("Error in URL (" . $openpath . "). Click <a href=\"$thisfn\">here</A>.<BR>");
     }
     $t=(int)0;
     while ($fnt = readdir($dp)) {
       $full_fn=$wd."/".$fnt;
-      if (!is_dir($full_fn) && eregi("\.(jpg|jpeg|gif|png)$",$fnt)) 
+      if (!is_dir($full_fn) && preg_match("/\.(jpg|jpeg|gif|png)$/i",$fnt))
       {
-        if(substr($fnt,0,1) != ".") 
+        if(substr($fnt,0,1) != ".")
         {
           $t++;
-          $fnlist[$fnt]=""; 
+          $fnlist[$fnt]="";
         }
       }
     }
@@ -350,7 +350,7 @@
       $line = fgets($file,4096);
       $nameposstr .= chop($line);
     }
-    else 
+    else
     {
       $file=0;
       $nameposstr .= substr($fixedimg,0,strlen($fixedimg)-strlen(strrchr($fixedimg,".")));
@@ -433,7 +433,7 @@
     if ($thumbnails == "convert" && $my_convert_path == "")
     {
       // if using win32, you will have to change this to $my_convert_path = "path_to_convert.exe" instead.
-      @exec("which convert", $tmp); 
+      @exec("which convert", $tmp);
       $my_convert_path=$tmp[0];
 
       if ($my_convert_path=="") $thumbnails="none";
@@ -451,10 +451,10 @@
       else $path="";
     }
 
-    while ($fn = readdir($dp)) 
-    { 
+    while ($fn = readdir($dp))
+    {
       if(substr($fn,0,1) != ".") {
-        $fnlist[$fn]=""; 
+        $fnlist[$fn]="";
       }
     };
     if (!isset($fnlist)) $fnlist[""]="";
@@ -483,7 +483,7 @@
     }
     else
     {
-        
+
         $tt=strrchr($wdp2,"/");
         if (!$tt || strlen($tt)<1) $tt=$wdp2;
         else $tt=substr($tt,1);
@@ -503,7 +503,7 @@
       next($fnlist);
       if ($path == "") $full_fn="./".$fn;
       else $full_fn=$path."/".$fn;
-      if (is_dir($full_fn)) 
+      if (is_dir($full_fn))
       {
          // check for thumbnail
          if ($path == "") $pfn=$fn . "/.dir.jpg";
@@ -536,9 +536,9 @@
 
     if (!file_exists($thumbnaildir))
     {
-      $oldumask = umask(0); 
+      $oldumask = umask(0);
       mkdir($thumbnaildir,0770);
-      umask($oldumask); 
+      umask($oldumask);
     }
     while ($fn = key($fnlist))
     {
@@ -547,7 +547,7 @@
       if ($path=="") $full_fn=$fn;
       else $full_fn=$path."/".$fn;
 
-      if (!is_dir($full_fn) && eregi("\.(jpg|jpeg|gif|png)$",$fn)) 
+      if (!is_dir($full_fn) && preg_match("/\.(jpg|jpeg|gif|png)$/i",$fn))
       {
         if ($tablestat == 0) echo "<TR>";
         else if ($tablestat == 3)
@@ -579,7 +579,7 @@
           {
             if ($thumbnails == "gd")
             {
-              if (eregi("\.gif$",$fn))
+              if (preg_match("/\.gif$/i",$fn))
               {
                 $thumbnailfile=$createfn;
                 $tmp=GetImageSize($createfn);
@@ -595,14 +595,14 @@
                   $neww=$maxthumbnailwidth;
                   $newh=$neww/$tmp[0] * $tmp[1];
                 }
-    
+
                 $sizestr="WIDTH=$neww HEIGHT=$newh";
               }
-              else 
+              else
               {
-                if (eregi("\.(jpg|jpeg)$",$fn))
+                if (preg_match("/\.(jpg|jpeg)$/i",$fn))
                   $im = imagecreatefromjpeg($createfn);
-                else if (eregi("\.png$",$fn))
+                else if (preg_match("/\.png$/i",$fn))
                   $im = imagecreatefrompng($createfn);
                 if ($im != "")
                 {
@@ -621,9 +621,9 @@
                   $im2=ImageCreate($neww,$newh);
                   ImageCopyResized($im2,$im,0,0,0,0,$neww,$newh,
                     imagesx($im),imagesy($im));
-                  if (eregi("\.(jpg|jpeg)$",$fn))
+                  if (preg_match("/\.(jpg|jpeg)$/i",$fn))
                     imagejpeg($im2,$thumbnailfile,50);
-                  else if (eregi("\.png$",$fn))
+                  else if (preg_match("/\.png$/i",$fn))
                     imagepng($im2,$thumbnailfile);
                   ImageDestroy($im);
                   ImageDestroy($im2);
@@ -645,12 +645,12 @@
                   $neww=$maxthumbnailwidth;
                   $newh=$neww/$tmp[0] * $tmp[1];
                 }
-                @exec($my_convert_path . ' -geometry ' . round($neww) . "x" . 
-                      round($newh) . ' -quality 50 "' . $createfn . '" "' . 
+                @exec($my_convert_path . ' -geometry ' . round($neww) . "x" .
+                      round($newh) . ' -quality 50 "' . $createfn . '" "' .
                       $thumbnailfile . '"');
-            } 
+            }
             else $dothumbnail=0;
-          } 
+          }
         } // $thumbnails != "none"
         else $dothumbnail=0;
 
@@ -658,21 +658,21 @@
         {
           if ($path=="") $wdtmp="";
           else $wdtmp=str_replace("%2F","/",rawurlencode($path . "/"));
-          if ($sizestr=="") 
+          if ($sizestr=="")
                echo "<img src=\"%2Ethumbnails/$wdtmp$fnu\" border=0" .
                " align=\"center\" alt=\"\"></a><BR>$stfn";
           else echo "<img src=\"$wdtmp$fnu\" $sizestr border=0" .
                " align=\"center\" alt=\"\"></a><BR>$stfn";
         }
         else echo "$stfn</A>";
-          
+
         echo "</font></TD>";
       }
     }
     if ($tablestat != 0)
     {
       if ($tablestat == 1) echo "<TD COLSPAN=2 WIDTH=33%>&nbsp;</TD>";
-      if ($tablestat == 1 || $tablestat == 2) 
+      if ($tablestat == 1 || $tablestat == 2)
                            echo "<TD COLSPAN=2 WIDTH=33%>&nbsp;</TD>";
       echo "</TR><TR>";
     }
@@ -689,7 +689,7 @@
       if ($path=="") $full_fn=$fn;
       else $full_fn=$path."/".$fn;
       $fs=floor(filesize($full_fn)/1000);
-      if (!is_dir($full_fn) && eregi("\.(wav|mp2|mp3)$",$fn)) {
+      if (!is_dir($full_fn) && preg_match("/\.(wav|mp2|mp3)$/i",$fn)) {
         $fnu=rawurlencode($fn);
         if ($tablestat == 0) {
           $tablestat=1;
@@ -707,7 +707,7 @@
       if ($path=="") $full_fn=$fn;
       else $full_fn=$path."/".$fn;
       $fs=floor(filesize($full_fn)/1000);
-      if (!is_dir($full_fn) && eregi("\.(avi|mov|mpg|mpeg)$",$fn)) { 
+      if (!is_dir($full_fn) && preg_match("/\.(avi|mov|mpg|mpeg)$/i",$fn)) {
         $fnu=rawurlencode($fn);
         if ($tablestat == 0) {
           $tablestat=1;
@@ -724,7 +724,7 @@
     {
       next($fnlist);
       $full_fn=$wd."/".$fn;
-      if (!is_dir($full_fn) && eregi("\.TXT$",$fn)) {
+      if (!is_dir($full_fn) && preg_match("/\.TXT$/i",$fn)) {
         $fnu=rawurlencode($fn);
         if ($tablestat == 0) {
           $tablestat=1;
@@ -743,7 +743,7 @@
       next($fnlist);
       if ($path=="") $full_fn=$fn;
       else $full_fn=$path."/".$fn;
-      if (!is_dir($full_fn) && eregi("\.(java|asm|inc|c|cpp|phps|php-source|h)$",$fn)) { 
+      if (!is_dir($full_fn) && preg_match("/\.(java|asm|inc|c|cpp|phps|php-source|h)$/i",$fn)) {
         $fnu=rawurlencode($fn);
         if ($tablestat == 0) {
           $tablestat=1;
@@ -763,7 +763,7 @@
       if ($path=="") $full_fn=$fn;
       else $full_fn=$path."/".$fn;
       $fs=floor(filesize($full_fn)/1000);
-      if (!is_dir($full_fn) && eregi("\.(zip|rar|arj|arc|lzh|lha|tar\.gz|tar|tgz|tar\.bz)$",$fn)) { 
+      if (!is_dir($full_fn) && preg_match("/\.(zip|rar|arj|arc|lzh|lha|tar\.gz|tar|tgz|tar\.bz)$/i",$fn)) {
         $fnu=rawurlencode($fn);
         if ($tablestat == 0) {
           $tablestat=1;
@@ -778,7 +778,7 @@
 
 
     if ($tablestat == 1) echo "</TD></TR>";
-    if ($comments_enabled && !file_exists($path == "" ? 
+    if ($comments_enabled && !file_exists($path == "" ?
         ".nodircomments" : ($path . "/.nodircomments")))
     {
       echo "<TR><TD COLSPAN=6><CENTER>";
@@ -790,7 +790,7 @@
   echo $bottomlinestart;
   if ($wasrescale==0 && $width!="") echo "Maximum display size: ";
   echo "<A HREF=\"$thisfn?setrescale=";
-  if ($wasrescale==0) echo "1"; 
+  if ($wasrescale==0) echo "1";
   if ($path!="") echo "&path=" . rawurlencode(str_replace("\\'","'",$path));
   if ($img!="") echo "&img=" . rawurlencode(str_replace("\\'","'",$img));
   if ($text!="") echo "&text=" . rawurlencode(str_replace("\\'","'",$text));
@@ -800,5 +800,5 @@
   else echo "Set</a> maximum display size";
   echo $copyrightstring;
   echo $bottomlineend;
-  echo "<script type=\"text/javascript\" src=\"http://mediaplayer.yahoo.com/js\"></script></BODY></HTML>\n";
+  echo "</BODY></HTML>\n";
 ?>
